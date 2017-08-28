@@ -26,15 +26,26 @@
     <script>
         function analyseImage() {
             var x = document.getElementById("imageFile");
-            var txt = "";
             var file = x.files[0];
-            if ('name' in file) {
-                txt += "name: " + file.name + "<br>";
+            var formData = new FormData();
+            
+            if(!file.type.match('image.*')) {
+                //Error
             }
-            if ('size' in file) {
-                txt += "size: " + file.size + " bytes <br>";
+            
+            formData.append('file', file, file.name);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'upload_handler.php', true);
+            xhr.onload = function() {
+                if(xhr.status === 200) {
+                    //Upload Success
+                } else {
+                    alert('An error occurred, upload failed!');
+                }
             }
-            document.getElementById("resual_display").innerHTML = txt;
+
+            xhr.send(formData);
         }
     </script>
 </body>
