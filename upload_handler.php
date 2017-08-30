@@ -41,7 +41,7 @@ if ($uploadOk == 0) {
         $target_file = $target_dir . "img-" . DateTime::getTimestamp();
     }
     if (move_uploaded_file($_FILES["imageFile"]["tmp_name"], $target_file)) {
-        // matlab_analysis($target_dir);
+        matlab_analysis($target_file);
     } else {
         echo "Sorry, there was an error uploading your file.";
     }
@@ -64,11 +64,12 @@ function matlab_analysis($filepath) {
         echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
     }
     
-    $data = $my_address . "/" . $filepath;
-    socket_write($socket, $data, strlen($in));
+    sleep(1);
+    $data = $my_address . "/" . $filepath . "\n";
+    socket_write($socket, $data, strlen($data));
     
-    while ($out = socket_read($socket, 2048)) {
-        echo $out;
+    while ($response = socket_read($socket, 2048)) {
+        echo $response;
     }
     
     socket_close($socket);
