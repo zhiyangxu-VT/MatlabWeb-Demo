@@ -19,7 +19,7 @@
         <div class="w3-card w3-margin" id="image_display">
         </div>
 
-        <div class="w3-card w3-margin" id="resual_display">
+        <div class="w3-card w3-margin" id="result_display">
         </div>
     </div>
 
@@ -33,13 +33,13 @@
                 //Error
             }
             
-            formData.append('file', file, file.name);
+            formData.append('imageFile', file, file.name);
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'upload_handler.php', true);
             xhr.onload = function() {
                 if(xhr.status === 200) {
-                    //Upload Success
+                     document.getElementById("result_display").innerHTML = xhr.responseText;
                 } else {
                     alert('An error occurred, upload failed!');
                 }
