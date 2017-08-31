@@ -13,7 +13,8 @@
         </div>
 
         <div id="action_display" class="w3-card w3-margin w3-padding-small">
-            <input type="file" id="imageFile" onchange="analyseImage()">
+            <input type="file" id="img_upload" onchange="analyseImage('')">
+            <input type="file" id="img_uploadbasic_info" onchange="analyseImage('basic_info')">
         </div>
 
         <div class="w3-card w3-margin" id="results">
@@ -26,18 +27,23 @@
     </div>
 
     <script>
-        function analyseImage() {
-            var x = document.getElementById("imageFile");
+        function analyseImage(action) {
+            var matlab_server = "127.0.0.1";
+            var matlab_port = 3000;
+
+            var x = document.getElementById("img_upload"+action);
             var file = x.files[0];
 
             clear_display();
             display_img(file);
 
             var formData = new FormData();
-            formData.append('imageFile', file, file.name);
+            formData.append('uploadfile', file, file.name);
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'upload_handler.php', true);
+            var url = "http://" + matlab_server + ":" + matlab_port + "/" + action;
+            xhr.open("POST", url, true);
+            //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     display_responce(JSON.parse(xhr.responseText));
