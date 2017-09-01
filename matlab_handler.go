@@ -10,13 +10,15 @@ import (
     "os/exec"
     //"encoding/json"
     "io"
+    //"io/ioutil"
     //"strings"
 
     "github.com/gorilla/mux"
 )
 
 func main() {
-	router_init()
+	matlab_init()
+    router_init()
 }
 
 func checkerr(err error) {
@@ -25,6 +27,19 @@ func checkerr(err error) {
 	}
 }
 
+func matlab_init() {
+    matlab_root := "/usr/local/MATLAB/MATLAB_Runtime/v92"
+    mcr_path_name := "LD_LIBRARY_PATH"
+
+    mcr_path := matlab_root + "/runtime/glnxa64:"
+    mcr_path += matlab_root + "/bin/glnxa64:"
+    mcr_path += matlab_root + "/sys/os/glnxa64:"
+    mcr_path += matlab_root + "/sys/opengl/lib/glnxa64"
+
+    err := os.Setenv(mcr_path_name, mcr_path)
+    checkerr(err)
+    log.Println(mcr_path_name, "set to", mcr_path)
+}
 func router_init() {
 	r := mux.NewRouter()
     r.HandleFunc("/", welcome_request)
@@ -54,7 +69,7 @@ func table_request(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		file := store_file(r)
         result := matlab_analyse(vars["cmd"], file)
-        fmt.Fprintf(w, "%v", result)
+        fmt.Fprintf(w, "%s", result)
 	case "PATCH":
 	case "DELETE":
 	}
@@ -84,12 +99,8 @@ func store_file(r *http.Request) string {
 }
 
 func matlab_analyse(command string, file_name string) string {
-    cmd := exec.Command("./bin/"+command, file_name)
-    log.Println("Started command")
-    result, err := cmd.StdoutPipe()
-    err = cmd.Wait()
-    log.Println("Command finished")
+    result, err := exec.Command("./bin/"+command, file_name).Output()
     checkerr(err)
 
-    return "{\"result\":\"sleeped\", \"" + command + "\":\"" + file_name + "\"}"
+    return string(result)
 }
