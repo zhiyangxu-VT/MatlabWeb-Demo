@@ -99,7 +99,7 @@ func store_file(r *http.Request) string {
 }
 
 func matlab_analyse(command string, file_name string) string {
-    result, err := exec.Command("./bin/"+command, file_name).Output()
+    result, err := exec.Command("./matlab/"+command, file_name).Output()
     checkerr(err)
 
     return string(result)
