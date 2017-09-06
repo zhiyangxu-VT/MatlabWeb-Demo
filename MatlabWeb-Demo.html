@@ -13,12 +13,11 @@
         </div>
 
         <div id="action_display" class="w3-card w3-margin w3-padding-small">
-            <input type="file" id="img_upload" onchange="analyseImage('')">
-            <input type="file" id="img_uploadbasic_info" onchange="analyseImage('basic_info')">
+            <input type="file" id="uploadedFile" onchange="analyseImage()">
         </div>
 
         <div class="w3-card w3-margin" id="results">
-            <div id="image_display">
+            <div id="file_display">
             </div>
 
             <div id="result_display">
@@ -27,23 +26,18 @@
     </div>
 
     <script>
-        function analyseImage(action) {
-            var matlab_server = "127.0.0.1";
-            var matlab_port = 3000;
-
-            var x = document.getElementById("img_upload"+action);
+        function analyseImage() {
+            var x = document.getElementById("uploadedFile");
             var file = x.files[0];
 
             clear_display();
-            display_img(file);
+            display_file(file);
 
             var formData = new FormData();
-            formData.append('uploadfile', file, file.name);
+            formData.append('uploadedFile', file, file.name);
 
             var xhr = new XMLHttpRequest();
-            var url = "http://" + matlab_server + ":" + matlab_port + "/" + action;
-            xhr.open("POST", url, true);
-            //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+            xhr.open('POST', 'upload_handler.php', true);
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     display_responce(JSON.parse(xhr.responseText));
@@ -57,21 +51,28 @@
 
         function clear_display() {
             var result_display = document.getElementById("result_display");
-            var img_display = document.getElementById('image_display');
+            var file_display = document.getElementById('file_display');
             result_display.innerHTML = "";
-            img_display.innerHTML = "";
+            file_display.innerHTML = "";
         }
 
-        function display_img(img) {
-            var img_display = document.getElementById('image_display');
+        function display_file(file) {
+            var file_display = document.getElementById('file_display');
+            var src = URL.createObjectURL(file);
 
-            var reader = new FileReader();
-            reader.onload = (function(theFile) {
-                return function(e) {
-                    img_display.innerHTML = ['<img style="width:100%" src="', e.target.result, '"/>'].join('');
-                };
-            })(img);
-            reader.readAsDataURL(img);
+            if (file.type.match("image/*")) {
+                console.log("image");
+                file_display.innerHTML = ['<img style="width:100%" src="', src, '"/>'].join('');
+            } else if (file.type.match("video/*")) {
+                console.log("video");
+                file_display.innerHTML = ['<video style="width:100%" controls src="', src, '"/>'].join('');
+            } else if (file.type.match("audio/*")) {
+                console.log("audio");
+                file_display.innerHTML = ['<audio style="width:100%" controls src="', src, '"/>'].join('');
+            } else {
+                console.log("other");
+                file_display.innerHTML = ['<span style="width:100%">', src, '</span>'].join('');
+            }
         }
 
         function display_responce(response) {
