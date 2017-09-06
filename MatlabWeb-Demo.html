@@ -12,8 +12,33 @@
             <a>MatlabWeb-Demo: Basic Image Processing</a>
         </div>
 
-        <div id="action_display" class="w3-card w3-margin w3-padding-small">
-            <input type="file" id="uploadedFile" onchange="analyseImage()">
+        <div id="action_display" class="w3-card w3-margin">
+            <div class="w3-bar w3-black">
+                <button class="w3-bar-item w3-button" onclick="openCity('London')">London</button>
+                <button class="w3-bar-item w3-button" onclick="openCity('Paris')">Paris</button>
+                <button class="w3-bar-item w3-button" onclick="openCity('Tokyo')">Tokyo</button>
+            </div>
+            <div id="image" class="city">
+                <h2>London</h2>
+                <p>London is the capital of England.</p>
+            </div>
+                    
+            <div id="audio" class="city" style="display:none">
+                <h2>Paris</h2>
+                <p>Paris is the capital of France.</p> 
+            </div>
+                    
+            <div id="video" class="city" style="display:none">
+                <h2>Tokyo</h2>
+                <p>Tokyo is the capital of Japan.</p>
+            </div>
+
+            <div id="audio" class="city" style="display:none">
+                <h2>Tokyo</h2>
+                <p>Tokyo is the capital of Japan.</p>
+            </div>
+
+            <input type="file" id="uploadedFile" onchange="analyseImage('')">
         </div>
 
         <div class="w3-card w3-margin" id="results">
@@ -26,18 +51,32 @@
     </div>
 
     <script>
-        function analyseImage() {
-            var x = document.getElementById("uploadedFile");
+        function openCity(cityName) {
+            var i;
+            var x = document.getElementsByClassName("city");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none"; 
+            }
+            document.getElementById(cityName).style.display = "block"; 
+        }
+
+        function analyseImage(action) {
+            var matlab_server = "127.0.0.1";
+            var matlab_port = 3000;
+
+            var x = document.getElementById("uploadedFile"+action);
             var file = x.files[0];
 
             clear_display();
             display_file(file);
-
+            
             var formData = new FormData();
-            formData.append('uploadedFile', file, file.name);
-
+            formData.append('uploadfile', file, file.name);
+            
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'upload_handler.php', true);
+            var url = "http://" + matlab_server + ":" + matlab_port + "/matlab/" + action;
+            
+            xhr.open("POST", url, true);
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     display_responce(JSON.parse(xhr.responseText));
@@ -45,7 +84,6 @@
                     alert('An error occurred, upload failed!');
                 }
             }
-
             xhr.send(formData);
         }
 
