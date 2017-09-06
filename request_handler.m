@@ -2,20 +2,29 @@ t = tcpip('0.0.0.0', 3000, 'NetworkRole', 'server');
 t.OutputBufferSize = 9999999999;
 
 while(1)
-    disp("Waiting for connection");
-    drawnow
     fopen(t);
-    disp("connected");
-    drawnow
+    
+    data = jsondecode(fscanf(t,'%s'));
+    file_url = strcat('http://', data.url);
+    disp(file_url)
+    result = struct;
+    
+    content = webread(file_url);
+    switch data.type
+        case 'image'
+            disp('image');
+            result = imfinfo(file_url);
+        case 'text'
+            disp('text');
+            result.type = 'text';
+        case 'video'
+            disp('video');
+            result = get(content);
+        case 'audio'
+            disp('audio');
+%             result = audioinfo(content);
+    end
 
-    % while(t.BytesAvailable<=0)
-    %     drawnow
-    % end
-    % disp("Data recieved");
-    data = fscanf(t,'%s');
-    disp(data);
-    img_file_url = char("http://" + data);
-    result = imfinfo(img_file_url);
     disp(result);
     response = jsonencode(result);
 
