@@ -14,31 +14,32 @@
 
         <div id="action_display" class="w3-card w3-margin">
             <div class="w3-bar w3-black">
-                <button class="w3-bar-item w3-button" onclick="openCity('London')">London</button>
-                <button class="w3-bar-item w3-button" onclick="openCity('Paris')">Paris</button>
-                <button class="w3-bar-item w3-button" onclick="openCity('Tokyo')">Tokyo</button>
+                <button class="w3-bar-item w3-button" onclick="showUpload('text')">Text</button>
+                <button class="w3-bar-item w3-button" onclick="showUpload('audio')">Audio</button>
+                <button class="w3-bar-item w3-button" onclick="showUpload('video')">Video</button>
+                <button class="w3-bar-item w3-button" onclick="showUpload('image')">Image</button>
             </div>
-            <div id="image" class="city">
-                <h2>London</h2>
-                <p>London is the capital of England.</p>
-            </div>
-                    
-            <div id="audio" class="city" style="display:none">
-                <h2>Paris</h2>
-                <p>Paris is the capital of France.</p> 
+            <div id="text" class="uploadFields">
+                <h2 class="w3-margin-left w3-margin-right">Text Analysis</h2>
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_text" onchange="analyseImage('text')">
             </div>
                     
-            <div id="video" class="city" style="display:none">
-                <h2>Tokyo</h2>
-                <p>Tokyo is the capital of Japan.</p>
+            <div id="audio" class="uploadFields" style="display:none">
+                <h2 class="w3-margin-left w3-margin-right">Audio Analysis</h2>
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_audio" onchange="analyseImage('audio')">
+            </div>
+                    
+            <div id="video" class="uploadFields" style="display:none">
+                <h2 class="w3-margin-left w3-margin-right">Video Analysis</h2>
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_video" onchange="analyseImage('video')">
             </div>
 
-            <div id="audio" class="city" style="display:none">
-                <h2>Tokyo</h2>
-                <p>Tokyo is the capital of Japan.</p>
+            <div id="image" class="uploadFields" style="display:none">
+                <h2 class="w3-margin-left w3-margin-right">Image Analysis</h2>
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_image" onchange="analyseImage('image')">
             </div>
 
-            <input type="file" id="uploadedFile" onchange="analyseImage('')">
+            
         </div>
 
         <div class="w3-card w3-margin" id="results">
@@ -51,24 +52,24 @@
     </div>
 
     <script>
-        function openCity(cityName) {
+        function showUpload(uploadType) {
             var i;
-            var x = document.getElementsByClassName("city");
+            var x = document.getElementsByClassName("uploadFields");
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none"; 
             }
-            document.getElementById(cityName).style.display = "block"; 
+            document.getElementById(uploadType).style.display = "block"; 
         }
 
         function analyseImage(action) {
             var matlab_server = "127.0.0.1";
             var matlab_port = 3000;
 
-            var x = document.getElementById("uploadedFile"+action);
+            var x = document.getElementById("uploadedFile_"+action);
             var file = x.files[0];
 
             clear_display();
-            display_file(file);
+            display_file(file, action);
             
             var formData = new FormData();
             formData.append('uploadfile', file, file.name);
@@ -83,7 +84,7 @@
                 } else {
                     alert('An error occurred, upload failed!');
                 }
-            }
+            };
             xhr.send(formData);
         }
 
@@ -94,22 +95,28 @@
             file_display.innerHTML = "";
         }
 
-        function display_file(file) {
+        function display_file(file, action) {
             var file_display = document.getElementById('file_display');
             var src = URL.createObjectURL(file);
 
-            if (file.type.match("image/*")) {
-                console.log("image");
-                file_display.innerHTML = ['<img style="width:100%" src="', src, '"/>'].join('');
-            } else if (file.type.match("video/*")) {
-                console.log("video");
-                file_display.innerHTML = ['<video style="width:100%" controls src="', src, '"/>'].join('');
-            } else if (file.type.match("audio/*")) {
-                console.log("audio");
-                file_display.innerHTML = ['<audio style="width:100%" controls src="', src, '"/>'].join('');
-            } else {
-                console.log("other");
-                file_display.innerHTML = ['<span style="width:100%">', src, '</span>'].join('');
+            switch(action) {
+                case "image":
+                    console.log("image");
+                    file_display.innerHTML = ['<img style="width:100%" src="', src, '"/>'].join('');
+                    break;
+                case "audio":
+                    console.log("audio");
+                    file_display.innerHTML = ['<audio style="width:100%" controls src="', src, '"/>'].join('');
+                    break;
+                case "vidoe":
+                    console.log("video");
+                    file_display.innerHTML = ['<video style="width:100%" controls src="', src, '"/>'].join('');
+                    break;
+                default:
+                    console.log("other");
+                    var text_display = document.createTextNode(getFile(src));
+                    text_display.style = "width:100%";
+                    file_display.appendChild(text_display);
             }
         }
 
