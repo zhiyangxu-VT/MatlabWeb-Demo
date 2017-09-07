@@ -112,11 +112,6 @@
                     console.log("video");
                     file_display.innerHTML = ['<video style="width:100%" controls src="', src, '"/>'].join('');
                     break;
-                default:
-                    console.log("other");
-                    var text_display = document.createTextNode(getFile(src));
-                    text_display.style = "width:100%";
-                    file_display.appendChild(text_display);
             }
         }
 
