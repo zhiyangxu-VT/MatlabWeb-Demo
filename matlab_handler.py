@@ -2,8 +2,10 @@
 
 import time
 import os
+import json
 
 from flask import Flask
+from flask import Response
 from flask import request
 from werkzeug.utils import secure_filename
 
@@ -19,7 +21,11 @@ def hello():
 def handle_matlab(action):
     saved_files = save_upload_files(request.files)
     result = matlab_analyse(action, saved_files)
-    return result
+
+    resp = Response(result)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    
+    return resp 
     
 def save_upload_files(uploadfile):
     a_file = uploadfile['uploadfile']
@@ -39,8 +45,10 @@ def matlab_analyse(action, files):
     eng = matlab.engine.start_matlab()
     matlab_func = getattr(eng, action)
     result = matlab_func(files)
+
+    print(result)
     
-    return str(result)
+    return json.dumps(result)
 
 if __name__ == "__main__":
     app.run()

@@ -21,22 +21,22 @@
             </div>
             <div id="text" class="uploadFields">
                 <h2 class="w3-margin-left w3-margin-right">Text Analysis</h2>
-                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_text" onchange="analyseImage('text')">
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_text_analyse" onchange="analyseImage('text_analyse')">
             </div>
                     
             <div id="audio" class="uploadFields" style="display:none">
                 <h2 class="w3-margin-left w3-margin-right">Audio Analysis</h2>
-                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_audio" onchange="analyseImage('audio')">
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_audio_analyse" onchange="analyseImage('audio_analyse')">
             </div>
                     
             <div id="video" class="uploadFields" style="display:none">
                 <h2 class="w3-margin-left w3-margin-right">Video Analysis</h2>
-                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_video" onchange="analyseImage('video')">
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_video_analyse" onchange="analyseImage('video_analyse')">
             </div>
 
             <div id="image" class="uploadFields" style="display:none">
                 <h2 class="w3-margin-left w3-margin-right">Image Analysis</h2>
-                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_image" onchange="analyseImage('image')">
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_image_analyse" onchange="analyseImage('image_analyse')">
             </div>
 
             
@@ -59,11 +59,12 @@
                 x[i].style.display = "none"; 
             }
             document.getElementById(uploadType).style.display = "block"; 
+            clear_display();
         }
 
         function analyseImage(action) {
             var matlab_server = "127.0.0.1";
-            var matlab_port = 3000;
+            var matlab_port = 5000;
 
             var x = document.getElementById("uploadedFile_"+action);
             var file = x.files[0];
@@ -100,15 +101,15 @@
             var src = URL.createObjectURL(file);
 
             switch(action) {
-                case "image":
+                case "image_analyse":
                     console.log("image");
                     file_display.innerHTML = ['<img style="width:100%" src="', src, '"/>'].join('');
                     break;
-                case "audio":
+                case "audio_analyse":
                     console.log("audio");
                     file_display.innerHTML = ['<audio style="width:100%" controls src="', src, '"/>'].join('');
                     break;
-                case "vidoe":
+                case "video_analyse":
                     console.log("video");
                     file_display.innerHTML = ['<video style="width:100%" controls src="', src, '"/>'].join('');
                     break;
