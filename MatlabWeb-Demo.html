@@ -21,22 +21,22 @@
             </div>
             <div id="text" class="uploadFields">
                 <h2 class="w3-margin-left w3-margin-right">Text Analysis</h2>
-                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_text_analyse" onchange="analyseImage('text_analyse')">
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_text_analyse" onchange="doAnalysis('text_analyse')">
             </div>
                     
             <div id="audio" class="uploadFields" style="display:none">
                 <h2 class="w3-margin-left w3-margin-right">Audio Analysis</h2>
-                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_audio_analyse" onchange="analyseImage('audio_analyse')">
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_audio_analyse" onchange="doAnalysis('audio_analyse')">
             </div>
                     
             <div id="video" class="uploadFields" style="display:none">
                 <h2 class="w3-margin-left w3-margin-right">Video Analysis</h2>
-                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_video_analyse" onchange="analyseImage('video_analyse')">
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_video_analyse" onchange="doAnalysis('video_analyse')">
             </div>
 
             <div id="image" class="uploadFields" style="display:none">
                 <h2 class="w3-margin-left w3-margin-right">Image Analysis</h2>
-                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_image_analyse" onchange="analyseImage('image_analyse')">
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_image_analyse" onchange="doAnalysis('image_analyse')">
             </div>
 
             
@@ -62,7 +62,7 @@
             clear_display();
         }
 
-        function analyseImage(action) {
+        function doAnalysis(action) {
             var matlab_server = "127.0.0.1";
             var matlab_port = 5000;
 
