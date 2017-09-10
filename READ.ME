@@ -1,0 +1,16 @@
+# Mallab side setup
+
+- Set up MATLAB interface for Python:
+	python {Matlab Path}/extern/engines/setup.py
+	{Matlab Path} by default is /usr/local/MATLAB/R2017a on Linux
+- Set up Python router:
+	pip install flask
+
+- all .m files should be place in the same path where you excute the python server
+
+- change port value at line 54 to run the server on a different port (default = 5000)
+
+
+# Web side setup
+
+- change the matlab_server and matlab_port variable at line 66 and 67 to the address and port you run the python server
