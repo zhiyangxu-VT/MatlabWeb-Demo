@@ -73,6 +73,7 @@
             display_file(file, action);
             
             var formData = new FormData();
+            formData.append("whoisthis", "who knows");
             formData.append('uploadfile', file, file.name);
             
             var xhr = new XMLHttpRequest();
