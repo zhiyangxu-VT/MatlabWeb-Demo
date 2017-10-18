@@ -68,7 +68,7 @@ def arguments_handling(ori_args):
 	for option in arg_options.values():
 		parser.add_argument(option['abbr'], option['full'], help=option['description'], nargs='?')
 	parsed = vars(parser.parse_args(ori_args))
-	print(parsed)
+
 	parsed_args = {}
 	for option in arg_options:
 		parsed_args[option] = arg_options[option]['default']
@@ -79,5 +79,5 @@ def arguments_handling(ori_args):
 
 if __name__ == "__main__":
 	args = arguments_handling(sys.argv[1:])
-	print(args)
+	print("use -h to see more options")
 	app.run(host=args['listening_on'], port=args['my_port'])
