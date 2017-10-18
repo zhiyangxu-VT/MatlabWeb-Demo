@@ -1,0 +1,6 @@
+#! /bin/bash
+firefox http://127.0.0.1/MatlabWeb-Demo.html &
+
+killall python
+cd ~/Desktop/MatlabWeb-Demo/Matlab\ Side/
+python matlab_handler.py
