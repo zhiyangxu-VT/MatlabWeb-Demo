@@ -1,10 +1,10 @@
 {
 	"listening_on": {
-		"default": "0.0.0.0", 
+		"default": "127.0.0.1", 
 		"full": "--listen", 
 		"name": "listen",
 		"abbr": "-l",
-		"description": "address that this server listening to, defalt to 0.0.0.0"
+		"description": "address that this server listening to, defalt to 12.0.0.1"
 	}, 
 	"webapp_host": {
 		"default": "http://127.0.0.1", 
