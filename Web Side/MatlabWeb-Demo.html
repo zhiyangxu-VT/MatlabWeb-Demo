@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>MatlabWeb-Demo</title>
+</head>
+
+<body>
+    <div class="w3-content" style="max-width:40em">
+        <div class="w3-padding w3-left-align w3-xlarge w3-margin-right w3-margin-left w3-margin-bottom w3-card" id="title">
+            <a>MatlabWeb-Demo: Basic Image Processing</a>
+        </div>
+
+        <div id="action_display" class="w3-card w3-margin">
+            <div class="w3-bar w3-black">
+                <button class="w3-bar-item w3-button" onclick="showUpload('text')">Text</button>
+                <button class="w3-bar-item w3-button" onclick="showUpload('audio')">Audio</button>
+                <button class="w3-bar-item w3-button" onclick="showUpload('video')">Video</button>
+                <button class="w3-bar-item w3-button" onclick="showUpload('image')">Image</button>
+            </div>
+            <div id="text" class="uploadFields">
+                <h2 class="w3-margin-left w3-margin-right">Text Analysis</h2>
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_text_analyse" onchange="doAnalysis('text_analyse')">
+            </div>
+                    
+            <div id="audio" class="uploadFields" style="display:none">
+                <h2 class="w3-margin-left w3-margin-right">Audio Analysis</h2>
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_audio_analyse" onchange="doAnalysis('audio_analyse')">
+            </div>
+                    
+            <div id="video" class="uploadFields" style="display:none">
+                <h2 class="w3-margin-left w3-margin-right">Video Analysis</h2>
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_video_analyse" onchange="doAnalysis('video_analyse')">
+            </div>
+
+            <div id="image" class="uploadFields" style="display:none">
+                <h2 class="w3-margin-left w3-margin-right">Image Analysis</h2>
+                <input class="w3-margin-left w3-margin-right w3-margin-bottom" type="file" id="uploadedFile_image_analyse" onchange="doAnalysis('image_analyse')">
+            </div>
+
+            
+        </div>
+
+        <div class="w3-card w3-margin" id="results">
+            <div id="file_display">
+            </div>
+
+            <div id="result_display">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showUpload(uploadType) {
+            var i;
+            var x = document.getElementsByClassName("uploadFields");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none"; 
+            }
+            document.getElementById(uploadType).style.display = "block"; 
+            clear_display();
+        }
+
+        function doAnalysis(action) {
+            var matlab_server = "127.0.0.1";
+            var matlab_port = 5000;
+
+            var x = document.getElementById("uploadedFile_"+action);
+            var file = x.files[0];
+
+            clear_display();
+            display_file(file, action);
+            
+            var formData = new FormData();
+            formData.append("whoisthis", "who knows");
+            formData.append('uploadfile', file, file.name);
+            
+            var xhr = new XMLHttpRequest();
+            var url = "http://" + matlab_server + ":" + matlab_port + "/matlab/" + action;
+            
+            xhr.open("POST", url, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    display_responce(JSON.parse(xhr.responseText));
+                } else {
+                    alert('An error occurred, upload failed!');
+                }
+            };
+            xhr.send(formData);
+        }
+
+        function clear_display() {
+            var result_display = document.getElementById("result_display");
+            var file_display = document.getElementById('file_display');
+            result_display.innerHTML = "";
+            file_display.innerHTML = "";
+        }
+
+        function display_file(file, action) {
+            var file_display = document.getElementById('file_display');
+            var src = URL.createObjectURL(file);
+
+            switch(action) {
+                case "image_analyse":
+                    console.log("image");
+                    file_display.innerHTML = ['<img style="width:100%" src="', src, '"/>'].join('');
+                    break;
+                case "audio_analyse":
+                    console.log("audio");
+                    file_display.innerHTML = ['<audio style="width:100%" controls src="', src, '"/>'].join('');
+                    break;
+                case "video_analyse":
+                    console.log("video");
+                    file_display.innerHTML = ['<video style="width:100%" controls src="', src, '"/>'].join('');
+                    break;
+            }
+        }
+
+        function display_responce(response) {
+            var x = document.getElementById("result_display");
+
+            var t = document.createElement("TABLE");
+            t.className = "w3-table  w3-striped";
+            for (var attr in response) {
+                var r = t.insertRow();
+                var c1 = r.insertCell(0);
+                var c2 = r.insertCell(1);
+
+                c1.innerHTML = attr;
+                c2.innerHTML = response[attr];
+            }
+
+            x.appendChild(t);
+        }
+    </script>
+</body>
+
+</html>

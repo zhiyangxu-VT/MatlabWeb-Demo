@@ -1,0 +1,23 @@
+{
+	"listening_on": {
+		"default": "127.0.0.1", 
+		"full": "--listen", 
+		"name": "listen",
+		"abbr": "-l",
+		"description": "address that this server listening to, defalt to 12.0.0.1"
+	}, 
+	"webapp_host": {
+		"default": "http://127.0.0.1", 
+		"full": "--webapp", 
+		"abbr": "-w", 
+		"name": "webapp",
+		"description": "the domain name that the webapp being hosted on, including http:// or https:// prefix, defalt to http://127.0.0.1. Only the request from this address will be handled. use 'all' to listen on request from any address"
+	}, 
+	"my_port": {
+		"default": 5000, 
+		"full": "--port", 
+		"abbr": "-p", 
+		"name": "port",
+		"description": "port that this server listening to, defalt to 5000"
+	}
+}
