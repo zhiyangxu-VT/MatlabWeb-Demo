@@ -3,5 +3,6 @@ firefox http://127.0.0.1/MatlabWeb-Demo.html &
 
 killall python
 cd ~/Desktop/MatlabWeb-Demo/Matlab\ Side/
-python matlab_handler.py -h
-python matlab_handler.py
+
+echo 'this demo runs the server listenin on 0.0.0.0 and handling requests from any domines'
+python matlab_handler.py -w all -l 0.0.0.0
