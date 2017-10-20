@@ -87,4 +87,4 @@ if __name__ == "__main__":
 	print 'use -h to see more options'
 
 	print 'handling requests from ' + args['webapp_host']
-	app.run(host=args['listening_on'], port=args['my_port'])
+	app.run(host=args['listening_on'], port=args['my_port'], threaded=True)
