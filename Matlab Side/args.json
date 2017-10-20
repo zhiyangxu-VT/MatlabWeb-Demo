@@ -11,7 +11,7 @@
 		"full": "--webapp", 
 		"abbr": "-w", 
 		"name": "webapp",
-		"description": "the domain name that the webapp being hosted on, including http:// or https:// prefix, defalt to http://127.0.0.1"
+		"description": "the domain name that the webapp being hosted on, including http:// or https:// prefix, defalt to http://127.0.0.1. Only the request from this address will be handled. use 'all' to listen on request from any address"
 	}, 
 	"my_port": {
 		"default": 5000, 

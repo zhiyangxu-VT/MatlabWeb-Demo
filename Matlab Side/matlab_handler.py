@@ -19,20 +19,22 @@ args = {}
 app = Flask(__name__)
 @app.route('/matlab/<action>', methods=['POST'])
 def handle_matlab(action):
-	print("Request Recieved")
+	print
+	print '***************************************'
+	print '** Request Recieved'
 
-	print("Identifying Request")
+	print '** Identifying Request'
 	if request.form["whoisthis"] != "who knows":
-		print("Unauthorized request")
+		print(" ** Unauthorized request")
 		abort(403)
 
-	print("Saving uploads")
+	print '** Saving uploads'
 	saved_files = save_upload_files(request.files)
 
-	print("Analyzing files")
+	print '** Analyzing files'
 	result = matlab_analyse(action, saved_files)
-	print("Analysis completed")
-
+	print '** Analysis completed'
+	
 	resp = Response(result)
 	resp.headers['Access-Control-Allow-Origin'] = args['webapp_host']
     
@@ -73,11 +75,16 @@ def arguments_handling(ori_args):
 	for option in arg_options:
 		parsed_args[option] = arg_options[option]['default']
 		if parsed[arg_options[option]['name']]:
-			parsed_args[option] = parsed[arg_options[option]['short']]
+			parsed_args[option] = parsed[arg_options[option]['name']]
+
+			if option == 'webapp_host' and parsed[arg_options[option]['name']] == 'all':
+				parsed_args[option] = '*'
 	
 	return parsed_args
 
 if __name__ == "__main__":
 	args = arguments_handling(sys.argv[1:])
-	print("use -h to see more options")
+	print 'use -h to see more options'
+
+	print 'handling requests from ' + args['webapp_host']
 	app.run(host=args['listening_on'], port=args['my_port'])
