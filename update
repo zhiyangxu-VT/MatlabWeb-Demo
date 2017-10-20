@@ -1,4 +1,4 @@
 #! /bin/bash
 
 echo 'Updating the applications from Github'
-git pull origin python_as_server
+git pull origin master
