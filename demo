@@ -1,8 +1,8 @@
 #! /bin/bash
-firefox http://127.0.0.1/MatlabWeb-Demo.html &
+/Applications/Safari.app/Contents/MacOS/Safari firefox ./Web\ side/MatlabWeb-Demo.html > /dev/null &
 
 killall python
-cd ~/Desktop/MatlabWeb-Demo/Matlab\ Side/
+cd ./Matlab\ Side/
 
 echo 'this demo runs the server listening on 0.0.0.0 and handling requests from any domines'
 python matlab_handler.py -w all -l 0.0.0.0
