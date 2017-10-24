@@ -15,16 +15,42 @@ if [ $python_major != '2' ] || [ $python_minor != '7' ]; then
     exit;
 fi
 
-echo "looking for matlab..."
+echo "looking for MATLAB...";
+
+matlab_root='no'
 if ! type matlab > /dev/null; then
-    echo "MATLAB not found";
-    exit;
+    echo "MATLAB command not found under $PATH";
+	read -p "Manually set MATLAB root directory if you have MATLAB installed, use no to quit: " matlab_root;
+else
+	matlab_root=`matlab -e | sed -n -e 's/MATLAB=//p'`;
 fi
 
-matlab_root=`matlab -e | sed -n -e 's/MATLAB=//p'`
-echo "MATLAB found at $matlab_root"
+if [ "$matlab_root" == 'no' ]; then
+	exit;
+fi
+	
+echo "MATLAB found at $matlab_root";
 
 echo "checking and installing python libraries"
-    echo `python -c 'import flas'`
-    echo `python -c 'import werkzeug.util'`
-    echo `python -c 'import matlab.engin'`
+
+test_result=`python -c 'import flask' 2>&1`
+if [ "$test_result" != '' ]; then
+	echo "Flask is not installed, installing..."
+	#`sudo pip install flask`
+fi
+echo "Flask is installed"
+
+test_result=`python -c 'import werkzeug.utils' 2>&1`
+if [ "$test_result" != '' ]; then
+	echo "Werkzeug is not installed, installing..."
+	#`sudo pip install werkzeug`
+fi
+echo "Wekzeug is installed"
+
+test_result=`python -c 'import matlab.engine' 2>&1`
+if [ "$test_result" != '' ]; then
+	echo "Installing MATLAB engine for python"
+	`cd $matlab_root/extern/engines/python/`
+	`sudo python setup.py install`
+fi
+echo "MATLAB engine for python is installed"
