@@ -57,9 +57,22 @@ def save_upload_files(uploadfile):
 def matlab_analyse(action, files):
     eng = matlab.engine.start_matlab()
     matlab_func = getattr(eng, action)
-    result = matlab_func(files)
-
-    return json.dumps(result)
+    
+    result = dict()
+    try:
+    	result = matlab_func(files)
+    except Exception as e:
+        print e
+        msg = "Error while excuting matlab script" 
+        result['error'] = msg
+    
+    try:
+        result = json.dumps(result)
+    except Exception as e:
+        print e
+        msg = "Results from the matlab script is not JSON serializable, please check" 
+        result = '{"error":"' + msg + '"}'
+    return result
 
 def arguments_handling(ori_args):
 	with open('args.json') as arg_file:
