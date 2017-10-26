@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo 'Updating the applications from Github'
+echo 'Updating the demo'
 echo ''
 
 git pull origin master
