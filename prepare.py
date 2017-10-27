@@ -1,6 +1,7 @@
 import sys
 import platform
 import subprocess
+import os
 
 print("Checking python version")
 if sys.version_info[0] != 2 or sys.version_info[1] != 7:
@@ -9,10 +10,9 @@ if sys.version_info[0] != 2 or sys.version_info[1] != 7:
 
 print("Looking for MATLAB")
 os_type = platform.system()
-matlab_engin = '\\extern\\engines\\python'
+matlab_engin = os.sep + os.path.join('extern','engines','python')
 matlab_root = ''
 if os_type == 'Windows':
-    import os
     paths = os.getenv("PATH").split(';')
     matlab_bin = ''
     for path in paths:
@@ -26,7 +26,16 @@ if os_type == 'Windows':
 
     matlab_root = matlab_bin.rsplit('\\', 1)[0]
 else:
-    matlab_root = subprocess.call(["matlab", "-e"])
+    try:
+        matlab_envs = subprocess.check_output(["matlab", "-e"]).split(os.linesep)
+    except:
+        print('Matlab not found under PATH')
+        sys.exit()
+    
+    for env in matlab_envs:
+        if 'MATLAB=' in env:
+            matlab_root = env.split('=')[1]
+            break
 
 print("Checking python libraries")
 try:
@@ -57,7 +66,8 @@ try:
 except:
     print("Installing MATLAB python engine")
     cwd = matlab_root + matlab_engin
-    cmd = 'python setup.py install'
+    print cwd
+    cmd = ['python', 'setup.py', 'install']
     install_process = subprocess.Popen(cmd, cwd=cwd)
     if install_process.wait() != 0:
         print('Errow while setting up the enviroment. Plase run as administrator')
